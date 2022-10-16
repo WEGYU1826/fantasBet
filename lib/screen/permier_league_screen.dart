@@ -124,140 +124,137 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: leagueList.length,
-            itemBuilder: (context, index) => ChangeNotifierProvider(
-              create: (context) => PermierLeague(),
-              child: Card(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 10.0,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Image.network(
-                                permierLeagueData.list[index].homeTeamCrest,
-                                height: 40.0,
-                                width: 40.0,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                permierLeagueData.list[index].homeTeamName,
-                                style: GoogleFonts.acme(),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            'VS',
-                            style: GoogleFonts.acme(),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Image.network(
-                                permierLeagueData.list[index].awayTeamCrest,
-                                height: 40.0,
-                                width: 40.0,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                permierLeagueData.list[index].awayTeamName,
-                                style: GoogleFonts.acme(),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).primaryColor),
+            itemBuilder: (context, index) => Card(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 10.0,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Image.network(
+                              permierLeagueData.list[index].homeTeamCrest,
+                              height: 40.0,
+                              width: 40.0,
                             ),
-                            onPressed: () {
-                              betSlip.addBets(
-                                permierLeagueData.list[index].id,
-                                permierLeagueData.list[index].homeTeamName,
-                                permierLeagueData.list[index].awayTeamName,
-                                permierLeagueData.list[index].odd[0],
-                                'Home',
-                              );
-                              // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(
-                              //     content: const Text(
-                              //       'Added item to BetSLip!',
-                              //       textAlign: TextAlign.center,
-                              //     ),
-                              //     duration: const Duration(seconds: 2),
-                              //     action: SnackBarAction(
-                              //       label: 'UNDO',
-                              //       onPressed: () {
-                              //         betSlip.removeSingleBetSlips(
-                              //           permierLeagueData.list[index].id,
-                              //         );
-                              //       },
-                              //     ),
-                              //     backgroundColor: Theme.of(context).primaryColor,
-                              //   ),
-                              // );
-                            },
-                            child: Text(
-                              'Home  ${permierLeagueData.list[index].odd[0]}',
+                            const SizedBox(height: 10.0),
+                            Text(
+                              permierLeagueData.list[index].homeTeamName,
                               style: GoogleFonts.acme(),
                             ),
+                          ],
+                        ),
+                        Text(
+                          'VS',
+                          style: GoogleFonts.acme(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Image.network(
+                              permierLeagueData.list[index].awayTeamCrest,
+                              height: 40.0,
+                              width: 40.0,
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              permierLeagueData.list[index].awayTeamName,
+                              style: GoogleFonts.acme(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor),
                           ),
-                          // ElevatedButton(
-                          //   style: ButtonStyle(
-                          //     backgroundColor: MaterialStateProperty.all(
-                          //         Theme.of(context).primaryColor),
-                          //   ),
-                          //   onPressed: () {
-                          //     betSlip.addBets(
-                          //       permierLeagueData.list[index].id,
-                          //       permierLeagueData.list[index].homeTeamName,
-                          //       permierLeagueData.list[index].awayTeamName,
-                          //       permierLeagueData.list[index].odd[0],
-                          //       'Draw',
-                          //     );
-                          //   },
-                          //   child: Text(
-                          //     'Draw  ${permierLeagueData.list[index].odd[1]}',
-                          //     style: GoogleFonts.acme(),
-                          //   ),
-                          // ),
-                          // ElevatedButton(
-                          //   style: ButtonStyle(
-                          //     backgroundColor: MaterialStateProperty.all(
-                          //         Theme.of(context).primaryColor),
-                          //   ),
-                          //   onPressed: () {
-                          //     betSlip.addBets(
-                          //       permierLeagueData.list[index].id,
-                          //       permierLeagueData.list[index].homeTeamName,
-                          //       permierLeagueData.list[index].awayTeamName,
-                          //       permierLeagueData.list[index].odd[0],
-                          //       'Away',
-                          //     );
-                          //   },
-                          //   child: Text(
-                          //     'Away  ${permierLeagueData.list[index].odd[2]}',
-                          //     style: GoogleFonts.acme(),
-                          //   ),
-                          // ),
-                        ],
-                      )
-                    ],
-                  ),
+                          onPressed: () {
+                            betSlip.addBets(
+                              permierLeagueData.list[index].id,
+                              permierLeagueData.list[index].homeTeamName,
+                              permierLeagueData.list[index].awayTeamName,
+                              permierLeagueData.list[index].odd[0],
+                              'Home',
+                            );
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text(
+                                  'Added item to BetSLip!',
+                                  textAlign: TextAlign.center,
+                                ),
+                                duration: const Duration(seconds: 2),
+                                action: SnackBarAction(
+                                  label: 'UNDO',
+                                  onPressed: () {
+                                    betSlip.removeSingleBetSlips(
+                                      permierLeagueData.list[index].id,
+                                    );
+                                  },
+                                ),
+                                backgroundColor: Theme.of(context).primaryColor,
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Home  ${permierLeagueData.list[index].odd[0]}',
+                            style: GoogleFonts.acme(),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor),
+                          ),
+                          onPressed: () {
+                            betSlip.addBets(
+                              permierLeagueData.list[index].id,
+                              permierLeagueData.list[index].homeTeamName,
+                              permierLeagueData.list[index].awayTeamName,
+                              permierLeagueData.list[index].odd[0],
+                              'Draw',
+                            );
+                          },
+                          child: Text(
+                            'Draw  ${permierLeagueData.list[index].odd[1]}',
+                            style: GoogleFonts.acme(),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor),
+                          ),
+                          onPressed: () {
+                            betSlip.addBets(
+                              permierLeagueData.list[index].id,
+                              permierLeagueData.list[index].homeTeamName,
+                              permierLeagueData.list[index].awayTeamName,
+                              permierLeagueData.list[index].odd[0],
+                              'Away',
+                            );
+                          },
+                          child: Text(
+                            'Away  ${permierLeagueData.list[index].odd[2]}',
+                            style: GoogleFonts.acme(),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),
