@@ -73,7 +73,7 @@ class AuthScreen extends StatelessWidget {
                         style: GoogleFonts.acme(
                           color: Colors.white,
                           fontSize: 50,
-                          fontWeight: FontWeight.bold,
+                          // fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

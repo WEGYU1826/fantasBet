@@ -5,11 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class BetSlipScreen extends StatelessWidget {
-  BetSlipScreen({super.key});
+class BetSlipScreen extends StatefulWidget {
+  const BetSlipScreen({super.key});
   static const routeName = '/bet_slip';
+
+  @override
+  State<BetSlipScreen> createState() => _BetSlipScreenState();
+}
+
+class _BetSlipScreenState extends State<BetSlipScreen> {
   final _form = GlobalKey<FormState>();
+
   TextEditingController stakeController = TextEditingController();
+  double stake = 5;
+
   @override
   Widget build(BuildContext context) {
     final betSlip = Provider.of<BetSlip>(context);
@@ -32,12 +41,16 @@ class BetSlipScreen extends StatelessWidget {
                   child: Form(
                     key: _form,
                     child: TextFormField(
-                      onSaved: (value) {},
+                      onSaved: (value) => setState(() {
+                        stake = double.parse(value!);
+                      }),
                       controller: stakeController,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "input can't be empty";
+                          return "stack can't be empty";
+                        } else if (double.parse(value) < 5) {
+                          return 'stack should be above 4';
                         }
                       },
                       decoration: InputDecoration(
@@ -69,7 +82,12 @@ class BetSlipScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 5.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final isValid = _form.currentState!.validate();
+                    if (isValid) {
+                      _form.currentState!.save();
+                    }
+                  },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                       Theme.of(context).primaryColor,
@@ -99,7 +117,7 @@ class BetSlipScreen extends StatelessWidget {
                       const Spacer(),
                       Chip(
                         label: Text(
-                          betSlip.totalAmount.toString(),
+                          betSlip.totalOdd.toString(),
                           style: TextStyle(
                               color: Theme.of(context)
                                   .primaryTextTheme
@@ -121,7 +139,7 @@ class BetSlipScreen extends StatelessWidget {
                       const Spacer(),
                       Chip(
                         label: Text(
-                          betSlip.totalAmount.toString(),
+                          stake.toString(),
                           style: TextStyle(
                               color: Theme.of(context)
                                   .primaryTextTheme
@@ -142,7 +160,7 @@ class BetSlipScreen extends StatelessWidget {
                       const Spacer(),
                       Chip(
                         label: Text(
-                          betSlip.totalAmount.toString(),
+                          '${betSlip.totalWin(stake).toStringAsFixed(2)} Birr',
                           style: TextStyle(
                               color: Theme.of(context)
                                   .primaryTextTheme
@@ -154,7 +172,10 @@ class BetSlipScreen extends StatelessWidget {
                     ],
                   ),
                   const Divider(),
-                  BetButton(betSlip: betSlip),
+                  BetButton(
+                    betSlip: betSlip,
+                    stake: stake,
+                  ),
                 ],
               ),
             ),
@@ -162,18 +183,16 @@ class BetSlipScreen extends StatelessWidget {
           const SizedBox(height: 10.0),
           Expanded(
             child: ListView.builder(
-                itemCount: betSlip.betSlips.length,
-                itemBuilder: (context, index) => BetSlipCard(
-                      id: betSlip.betSlips.values.toList()[index].id,
-                      betID: betSlip.betSlips.keys.toList()[index],
-                      homeTeam:
-                          betSlip.betSlips.values.toList()[index].homeTeam,
-                      awayTeam:
-                          betSlip.betSlips.values.toList()[index].awayTeam,
-                      odd: betSlip.betSlips.values.toList()[index].odd,
-                      prediction:
-                          betSlip.betSlips.values.toList()[index].prediction,
-                    )),
+              itemCount: betSlip.betSlips.length,
+              itemBuilder: (context, index) => BetSlipCard(
+                id: betSlip.betSlips.values.toList()[index].id,
+                betID: betSlip.betSlips.keys.toList()[index],
+                homeTeam: betSlip.betSlips.values.toList()[index].homeTeam,
+                awayTeam: betSlip.betSlips.values.toList()[index].awayTeam,
+                odd: betSlip.betSlips.values.toList()[index].odd,
+                prediction: betSlip.betSlips.values.toList()[index].prediction,
+              ),
+            ),
           ),
         ],
       ),
@@ -185,8 +204,10 @@ class BetButton extends StatefulWidget {
   const BetButton({
     super.key,
     required this.betSlip,
+    required this.stake,
   });
   final BetSlip betSlip;
+  final double stake;
 
   @override
   State<BetButton> createState() => _BetButtonState();
@@ -198,7 +219,7 @@ class _BetButtonState extends State<BetButton> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: (widget.betSlip.totalAmount <= 0 || _isLoading)
+      onPressed: (widget.betSlip.totalWin(widget.stake) <= 0 || _isLoading)
           ? null
           : () async {
               setState(() {
@@ -207,7 +228,7 @@ class _BetButtonState extends State<BetButton> {
               await Provider.of<BetHistory>(context, listen: false)
                   .addBetHistory(
                 widget.betSlip.betSlips.values.toList(),
-                widget.betSlip.totalAmount,
+                widget.betSlip.totalWin(widget.stake),
               );
               setState(() {
                 _isLoading = false;

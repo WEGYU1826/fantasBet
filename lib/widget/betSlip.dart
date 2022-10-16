@@ -12,12 +12,10 @@ class BetSlipCard extends StatelessWidget {
     this.homeTeam,
     this.odd,
     this.prediction,
-    this.stack,
   });
 
   final String? id;
   final String? betID;
-  final double? stack;
   final String? homeTeam;
   final String? awayTeam;
   final double? odd;

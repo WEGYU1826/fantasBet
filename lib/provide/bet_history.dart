@@ -6,13 +6,13 @@ import 'package:http/http.dart' as http;
 
 class BetHistoryItem {
   final String id;
-  final double amount;
+  final double totalWin;
   final List<BetSlipItem> bets;
   final DateTime dateTime;
 
   BetHistoryItem({
     required this.id,
-    required this.amount,
+    required this.totalWin,
     required this.bets,
     required this.dateTime,
   });
@@ -44,7 +44,7 @@ class BetHistory with ChangeNotifier {
           0,
           BetHistoryItem(
             id: betID,
-            amount: betData['amount'],
+            totalWin: betData['totalWin'],
             bets: (betData['bets'] as List<dynamic>)
                 .map(
                   (items) => BetSlipItem(
@@ -54,7 +54,6 @@ class BetHistory with ChangeNotifier {
                     awayTeam: items['awayTeam'],
                     quantity: items['quantity'],
                     prediction: items['prediction'],
-                    stake: items['stake'],
                   ),
                 )
                 .toList(),
@@ -77,7 +76,7 @@ class BetHistory with ChangeNotifier {
       final response = await http.post(
         Uri.parse(url),
         body: json.encode({
-          'amount': total,
+          'totalWin': total,
           'dateTime': timeStamp.toIso8601String(),
           'bets': betSlip
               .map((e) => {
@@ -87,7 +86,6 @@ class BetHistory with ChangeNotifier {
                     'awayTeam': e.awayTeam,
                     'quantity': e.quantity,
                     'prediction': e.quantity,
-                    'stake': e.stake,
                   })
               .toList(),
         }),
@@ -96,7 +94,7 @@ class BetHistory with ChangeNotifier {
         0,
         BetHistoryItem(
           id: json.decode(response.body)['name'],
-          amount: total,
+          totalWin: total,
           bets: betSlip,
           dateTime: timeStamp,
         ),

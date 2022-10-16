@@ -7,7 +7,6 @@ class BetSlipItem {
   final String prediction;
   final int quantity;
   final double odd;
-  final double stake;
 
   BetSlipItem({
     required this.id,
@@ -16,7 +15,6 @@ class BetSlipItem {
     required this.awayTeam,
     required this.quantity,
     required this.prediction,
-    required this.stake,
   });
 }
 
@@ -26,56 +24,45 @@ class BetSlip with ChangeNotifier {
     return {..._betSlips};
   }
 
+  // int get betCount {
+  //   var total = 0;
+  //   _betSlips.forEach((key, value) {
+  //     total += value.quantity;
+  //   });
+  //   return total;
+  // }
   int get betCount {
-    var total = 0;
-    _betSlips.forEach((key, value) {
-      total += value.quantity;
-    });
-    return total;
+    return _betSlips == null ? 0 : _betSlips.length;
   }
 
-  double get totalAmount {
+  double get totalOdd {
     var total = 1.0;
     _betSlips.forEach((key, value) {
-      total *= value.odd * value.quantity;
+      total *= value.odd;
     });
     return total;
   }
 
-  void addBets(
-    String matchID,
-    String homeTeamName,
-    String awayTeamName,
-    double odd,
-    String prediction,
-  ) {
-    if (_betSlips.containsKey(matchID)) {
-      _betSlips.update(
-        matchID,
-        (existingBetSlipItem) => BetSlipItem(
-          id: existingBetSlipItem.id,
-          odd: existingBetSlipItem.odd,
-          homeTeam: existingBetSlipItem.homeTeam,
-          awayTeam: existingBetSlipItem.awayTeam,
-          quantity: existingBetSlipItem.quantity,
-          prediction: existingBetSlipItem.prediction,
-          stake: existingBetSlipItem.stake,
-        ),
-      );
-    } else {
-      _betSlips.putIfAbsent(
-        matchID,
-        () => BetSlipItem(
-          id: DateTime.now().toString(),
-          odd: odd,
-          homeTeam: homeTeamName,
-          awayTeam: awayTeamName,
-          quantity: 1,
-          prediction: prediction,
-          stake: 1,
-        ),
-      );
-    }
+  double totalWin(double stack) {
+    var total = 1.0;
+    total = totalOdd * stack;
+    return total;
+  }
+
+  void addBets(String matchID, String homeTeamName, String awayTeamName,
+      double odd, String prediction) {
+    _betSlips.putIfAbsent(
+      matchID,
+      () => BetSlipItem(
+        id: DateTime.now().toString(),
+        odd: odd,
+        homeTeam: homeTeamName,
+        awayTeam: awayTeamName,
+        quantity: 1,
+        prediction: prediction,
+      ),
+    );
+
     notifyListeners();
   }
 
@@ -98,7 +85,6 @@ class BetSlip with ChangeNotifier {
           odd: existingCartItem.odd,
           prediction: existingCartItem.prediction,
           quantity: existingCartItem.quantity - 1,
-          stake: existingCartItem.stake,
         ),
       );
     } else {

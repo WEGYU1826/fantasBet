@@ -26,7 +26,7 @@ class _BetHistoryItemsState extends State<BetHistoryItems> {
         child: Column(
           children: <Widget>[
             ListTile(
-              title: Text('\$${widget.bets!.amount.toStringAsFixed(2)}'),
+              title: Text('${widget.bets!.totalWin.toStringAsFixed(2)} Birr'),
               subtitle: Text(
                 DateFormat('dd/mm/yyyy hh:mm').format(
                   widget.bets!.dateTime,
