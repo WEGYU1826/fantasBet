@@ -48,12 +48,12 @@ class BetHistory with ChangeNotifier {
             bets: (betData['bets'] as List<dynamic>)
                 .map(
                   (items) => BetSlipItem(
-                    id: items['id'],
+                    id: items['id'].toString(),
                     odd: items['odd'],
                     homeTeam: items['homeTeam'],
                     awayTeam: items['awayTeam'],
                     quantity: items['quantity'],
-                    prediction: items['prediction'],
+                    prediction: items['prediction'].toString(),
                   ),
                 )
                 .toList(),
