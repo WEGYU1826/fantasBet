@@ -22,7 +22,7 @@ class PermierLeagueItem {
 }
 
 class PermierLeague with ChangeNotifier {
-  List<PermierLeagueItem> _list = [
+  final List<PermierLeagueItem> _list = [
     PermierLeagueItem(
       id: 'm1',
       homeTeamName: "Brentford FC",
@@ -47,7 +47,7 @@ class PermierLeague with ChangeNotifier {
           "https://logodownload.org/wp-content/uploads/2019/04/wolverhampton-logo-escudo-3.png",
       awayTeamName: 'Nottingham Forest FC',
       awayTeamCrest: "https://crests.football-data.org/351.png",
-      odd: [2.0, 3.0, 2.8],
+      odd: [2.0, 3.0, 2.9],
     ),
     PermierLeagueItem(
       id: 'm1',
@@ -56,7 +56,7 @@ class PermierLeague with ChangeNotifier {
           "https://seeklogo.com/images/F/fulham-fc-logo-EBBC39136A-seeklogo.com.png",
       awayTeamName: 'AFC Bournemouth FC',
       awayTeamCrest: "https://crests.football-data.org/1044.png",
-      odd: [2.3, 4.2, 1.8],
+      odd: [2.3, 4.2, 1.7],
     ),
     PermierLeagueItem(
       id: 'm1',
@@ -73,7 +73,7 @@ class PermierLeague with ChangeNotifier {
       homeTeamCrest: "https://crests.football-data.org/340.png",
       awayTeamName: 'WestHam United FC',
       awayTeamCrest: "https://crests.football-data.org/563.png",
-      odd: [2.4, 5.4, 1.6],
+      odd: [2.1, 5.4, 1.6],
     ),
     PermierLeagueItem(
       id: 'm1',
@@ -89,7 +89,7 @@ class PermierLeague with ChangeNotifier {
       homeTeamCrest: "https://crests.football-data.org/341.png",
       awayTeamName: 'Arsenal FC',
       awayTeamCrest: "https://crests.football-data.org/57.png",
-      odd: [5.4, 8.0, 1.1],
+      odd: [5.1, 8.1, 1.1],
     ),
     PermierLeagueItem(
       id: 'm1',
@@ -105,7 +105,7 @@ class PermierLeague with ChangeNotifier {
       homeTeamCrest: "https://crests.football-data.org/64.png",
       awayTeamName: 'Manchester City FC',
       awayTeamCrest: "https://crests.football-data.org/65.png",
-      odd: [2.4, 2.0, 1.8],
+      odd: [4.4, 6.1, 3.3],
     ),
   ];
 
@@ -117,64 +117,63 @@ class PermierLeague with ChangeNotifier {
   // final String userID;
   // PermierLeague(this.authToken, this.userID, this._list);
 
-  Future<void> fetchSetMatches([bool filterByUser = false]) async {
-    final filterString =
-        filterByUser ? 'orderBy="creatorID"&equalTo="$userID"' : '';
-    final url =
-        'https://fantasybet-f763e-default-rtdb.firebaseio.com/matches.json?auth=$authToken&$filterString';
-    try {
-      final response = await http.get(Uri.parse(url));
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if (extractedData == null) {
-        return;
-      }
-      final List<PermierLeagueItem> loadedMatches = [];
-      extractedData.forEach((matchID, matchData) {
-        loadedMatches.insert(
-            0,
-            PermierLeagueItem(
-              id: matchID,
-              homeTeamName: matchData['homeTeamName'],
-              homeTeamCrest: matchData['homeTeamCrest'],
-              awayTeamName: matchData['awayTeamName'],
-              awayTeamCrest: matchData['awayTeamCrest'],
-              odd: [],
-            ));
-      });
-      _list = loadedMatches;
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
-  }
+  // Future<void> fetchSetMatches([bool filterByUser = false]) async {
+  //   final filterString = filterByUser ? 'orderBy="creatorID"&equalTo=""' : '';
+  //   final url =
+  //       'https://fantasybet-f763e-default-rtdb.firebaseio.com/matches.json&$filterString';
+  //   try {
+  //     final response = await http.get(Uri.parse(url));
+  //     final extractedData = json.decode(response.body) as Map<String, dynamic>;
+  //     if (extractedData == null) {
+  //       return;
+  //     }
+  //     final List<PermierLeagueItem> loadedMatches = [];
+  //     extractedData.forEach((matchID, matchData) {
+  //       loadedMatches.insert(
+  //           0,
+  //           PermierLeagueItem(
+  //             id: matchID,
+  //             homeTeamName: matchData['homeTeamName'],
+  //             homeTeamCrest: matchData['homeTeamCrest'],
+  //             awayTeamName: matchData['awayTeamName'],
+  //             awayTeamCrest: matchData['awayTeamCrest'],
+  //             odd: [],
+  //           ));
+  //     });
+  //     _list = loadedMatches;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
-  Future<void> addMatches(PermierLeagueItem matches) async {
-    const url =
-        'https://fantasybet-f763e-default-rtdb.firebaseio.com/matches.json';
-    try {
-      final response = await http.post(Uri.parse(url),
-          body: json.encode({
-            'homeTeamName': matches.homeTeamName,
-            'homeTeamCrest': matches.homeTeamCrest,
-            'awayTeamName': matches.awayTeamName,
-            'awayTeamCrest': matches.awayTeamName,
-            'odd': matches.odd,
-          }));
+  // Future<void> addMatches(PermierLeagueItem matches) async {
+  //   const url =
+  //       'https://fantasybet-f763e-default-rtdb.firebaseio.com/matches.json';
+  //   try {
+  //     final response = await http.post(Uri.parse(url),
+  //         body: json.encode({
+  //           'homeTeamName': matches.homeTeamName,
+  //           'homeTeamCrest': matches.homeTeamCrest,
+  //           'awayTeamName': matches.awayTeamName,
+  //           'awayTeamCrest': matches.awayTeamName,
+  //           'odd': matches.odd,
+  //         }));
 
-      final newMatches = PermierLeagueItem(
-        id: json.decode(response.body)['name'],
-        homeTeamName: matches.homeTeamName,
-        homeTeamCrest: matches.homeTeamCrest,
-        awayTeamName: matches.awayTeamName,
-        awayTeamCrest: matches.awayTeamCrest,
-        odd: matches.odd,
-      );
-      list.insert(0, newMatches);
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
-  }
+  //     final newMatches = PermierLeagueItem(
+  //       id: json.decode(response.body)['name'],
+  //       homeTeamName: matches.homeTeamName,
+  //       homeTeamCrest: matches.homeTeamCrest,
+  //       awayTeamName: matches.awayTeamName,
+  //       awayTeamCrest: matches.awayTeamCrest,
+  //       odd: matches.odd,
+  //     );
+  //     list.insert(0, newMatches);
+  //     notifyListeners();
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
   @override
   void notifyListeners() {

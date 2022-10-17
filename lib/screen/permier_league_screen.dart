@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,6 +8,7 @@ import 'package:fantasy_bet/provide/permier_league.dart';
 import 'package:fantasy_bet/screen/bet_slip_screen.dart';
 import 'package:fantasy_bet/widget/app_drawer.dart';
 import 'package:fantasy_bet/widget/badge.dart';
+import 'package:fantasy_bet/widget/bet_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,18 +24,32 @@ class PermierLeagueScreen extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<PermierLeagueScreen> {
-  // var _isInit = true;
-  // var _isLoading = false;
+  var selectedIndex = -1;
+  var selectedMatch = -1;
+  HashSet selectItems = HashSet();
+  bool isMultiSelectionEnabled = false;
 
-  final List<Map> _betButton = [
-    {'onPressed': () {}, 'text': 'Home', 'odd': 1},
-    {'onPressed': () {}, 'text': 'Draw', 'odd': 1},
-    {'onPressed': () {}, 'text': 'Away', 'odd': 1},
+  final List<String> _betBtnText = [
+    'Home',
+    'Draw',
+    'Away',
   ];
+
+  void doMultiSelection(String path, [String? betID]) {
+    setState(() {
+      if (selectItems.contains(path)) {
+        selectItems.remove(path);
+        Provider.of<BetSlip>(context, listen: false).removeItem(betID!);
+      } else {
+        selectItems.add(path);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final permierLeagueData = Provider.of<PermierLeague>(context);
+    final permierLeagueData =
+        Provider.of<PermierLeague>(context, listen: false);
     final leagueList = permierLeagueData.list;
 
     final betSlip = Provider.of<BetSlip>(context, listen: false);
@@ -56,13 +72,13 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
                       value: betSlip.betCount.toString(),
                       child: ch!,
                     ),
-                    child: GestureDetector(
-                      onTap: () {
+                    child: IconButton(
+                      onPressed: () {
                         Navigator.of(context).pushNamed(
                           BetSlipScreen.routeName,
                         );
                       },
-                      child: SvgPicture.asset(
+                      icon: SvgPicture.asset(
                         'assets/icons/bl.svg',
                         width: 30.0,
                         height: 30.0,
@@ -140,10 +156,15 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Image.network(
-                              permierLeagueData.list[index].homeTeamCrest,
-                              height: 40.0,
+                            CachedNetworkImage(
                               width: 40.0,
+                              height: 40.0,
+                              imageUrl:
+                                  permierLeagueData.list[index].homeTeamCrest,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
                             const SizedBox(height: 10.0),
                             Text(
@@ -159,10 +180,15 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
-                            Image.network(
-                              permierLeagueData.list[index].awayTeamCrest,
-                              height: 40.0,
+                            CachedNetworkImage(
                               width: 40.0,
+                              height: 40.0,
+                              imageUrl:
+                                  permierLeagueData.list[index].awayTeamCrest,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
                             const SizedBox(height: 10.0),
                             Text(
@@ -173,87 +199,136 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).primaryColor),
-                          ),
-                          onPressed: () {
-                            betSlip.addBets(
-                              permierLeagueData.list[index].id,
-                              permierLeagueData.list[index].homeTeamName,
-                              permierLeagueData.list[index].awayTeamName,
-                              permierLeagueData.list[index].odd[0],
-                              'Home',
-                            );
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text(
-                                  'Added item to BetSLip!',
-                                  textAlign: TextAlign.center,
-                                ),
-                                duration: const Duration(seconds: 2),
-                                action: SnackBarAction(
-                                  label: 'UNDO',
-                                  onPressed: () {
-                                    betSlip.removeSingleBetSlips(
-                                      permierLeagueData.list[index].id,
-                                    );
-                                  },
-                                ),
-                                backgroundColor: Theme.of(context).primaryColor,
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: <Widget>[
+                    //     ElevatedButton(
+                    //       style: ButtonStyle(
+                    //         backgroundColor: MaterialStateProperty.all(
+                    //             Theme.of(context).primaryColor),
+                    //       ),
+                    //       onPressed: () {
+                    //         betSlip.addBets(
+                    //           permierLeagueData.list[index].id,
+                    //           permierLeagueData.list[index].homeTeamName,
+                    //           permierLeagueData.list[index].awayTeamName,
+                    //           permierLeagueData.list[index].odd[0],
+                    //           'Home',
+                    //         );
+                    //         // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    //         // ScaffoldMessenger.of(context).showSnackBar(
+                    //         //   SnackBar(
+                    //         //     content: const Text(
+                    //         //       'Added item to BetSLip!',
+                    //         //       textAlign: TextAlign.center,
+                    //         //     ),
+                    //         //     duration: const Duration(seconds: 2),
+                    //         //     action: SnackBarAction(
+                    //         //       label: 'UNDO',
+                    //         //       onPressed: () {
+                    //         //         betSlip.removeSingleBetSlips(
+                    //         //           permierLeagueData.list[index].id,
+                    //         //         );
+                    //         //       },
+                    //         //     ),
+                    //         //     backgroundColor: Theme.of(context).primaryColor,
+                    //         //   ),
+                    //         // );
+                    //       },
+                    //       child: Text(
+                    //         'Home  ${permierLeagueData.list[index].odd[0]}',
+                    //         style: GoogleFonts.acme(),
+                    //       ),
+                    //     ),
+                    //     ElevatedButton(
+                    //       style: ButtonStyle(
+                    //         backgroundColor: MaterialStateProperty.all(
+                    //             Theme.of(context).primaryColor),
+                    //       ),
+                    //       onPressed: () {
+                    //         betSlip.addBets(
+                    //           permierLeagueData.list[index].id,
+                    //           permierLeagueData.list[index].homeTeamName,
+                    //           permierLeagueData.list[index].awayTeamName,
+                    //           permierLeagueData.list[index].odd[0],
+                    //           'Draw',
+                    //         );
+                    //       },
+                    //       child: Text(
+                    //         'Draw  ${permierLeagueData.list[index].odd[1]}',
+                    //         style: GoogleFonts.acme(),
+                    //       ),
+                    //     ),
+                    //     ElevatedButton(
+                    //       style: ButtonStyle(
+                    //         backgroundColor: MaterialStateProperty.all(
+                    //             Theme.of(context).primaryColor),
+                    //       ),
+                    //       onPressed: () {
+                    //         betSlip.addBets(
+                    //           permierLeagueData.list[index].id,
+                    //           permierLeagueData.list[index].homeTeamName,
+                    //           permierLeagueData.list[index].awayTeamName,
+                    //           permierLeagueData.list[index].odd[0],
+                    //           'Away',
+                    //         );
+                    //       },
+                    //       child: Text(
+                    //         'Away  ${permierLeagueData.list[index].odd[2]}',
+                    //         style: GoogleFonts.acme(),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // )
+                    const SizedBox(height: 10.0),
+
+                    Wrap(
+                      direction: Axis.horizontal,
+                      children: List.generate(
+                        permierLeagueData.list[index].odd.length,
+                        (i) {
+                          return InkWell(
+                            onTap: () {
+                              doMultiSelection(
+                                permierLeagueData.list[index].odd[i].toString(),
+                                betSlip.betSlips.keys.toString(),
+                              );
+                              selectedIndex = i;
+                              setState(() {
+                                selectedMatch = index;
+                              });
+                              betSlip.addBets(
+                                permierLeagueData.list[index].id,
+                                permierLeagueData.list[index].homeTeamName,
+                                permierLeagueData.list[index].awayTeamName,
+                                permierLeagueData.list[index].odd[i],
+                                _betBtnText[i],
+                              );
+                            },
+                            child: Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: BetButtons(
+                                color: Colors.white,
+                                backgroundColor: selectItems.contains(
+                                        permierLeagueData.list[index].odd[i]
+                                            .toString())
+                                    ? Theme.of(context).accentColor
+                                    : Theme.of(context).primaryColor,
+                                borderColor: selectItems.contains(
+                                        permierLeagueData.list[index].odd[i]
+                                            .toString())
+                                    ? Theme.of(context).accentColor
+                                    : Theme.of(context).primaryColor,
+                                size: 25,
+                                text:
+                                    '${_betBtnText[i]} ${permierLeagueData.list[index].odd[i]}',
                               ),
-                            );
-                          },
-                          child: Text(
-                            'Home  ${permierLeagueData.list[index].odd[0]}',
-                            style: GoogleFonts.acme(),
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).primaryColor),
-                          ),
-                          onPressed: () {
-                            betSlip.addBets(
-                              permierLeagueData.list[index].id,
-                              permierLeagueData.list[index].homeTeamName,
-                              permierLeagueData.list[index].awayTeamName,
-                              permierLeagueData.list[index].odd[0],
-                              'Draw',
-                            );
-                          },
-                          child: Text(
-                            'Draw  ${permierLeagueData.list[index].odd[1]}',
-                            style: GoogleFonts.acme(),
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).primaryColor),
-                          ),
-                          onPressed: () {
-                            betSlip.addBets(
-                              permierLeagueData.list[index].id,
-                              permierLeagueData.list[index].homeTeamName,
-                              permierLeagueData.list[index].awayTeamName,
-                              permierLeagueData.list[index].odd[0],
-                              'Away',
-                            );
-                          },
-                          child: Text(
-                            'Away  ${permierLeagueData.list[index].odd[2]}',
-                            style: GoogleFonts.acme(),
-                          ),
-                        ),
-                      ],
-                    )
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -48,6 +48,11 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                 color: Theme.of(context).primaryColor,
               ),
             );
+            // } else {
+            //   if (snapShot.error != null) {
+            //     return const Center(
+            //       child: Text("An error occurred"),
+            //     );
           } else {
             return Consumer<BetHistory>(
               builder: (context, betHistoryData, ch) => ListView.builder(
@@ -57,6 +62,7 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                 ),
               ),
             );
+            // }
           }
         },
       ),

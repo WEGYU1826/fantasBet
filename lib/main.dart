@@ -76,8 +76,6 @@ class MyApp extends StatelessWidget {
             AuthScreen.routeName: (context) => AuthScreen(),
             MainPage.routeName: (context) => MainPage(),
             PermierLeagueScreen.routeName: (context) => PermierLeagueScreen(),
-            ChampionsLeagueScreen.routeName: (context) =>
-                ChampionsLeagueScreen(),
             BetSlipScreen.routeName: (context) => BetSlipScreen(),
             BetHistoryScreen.routeName: (context) => BetHistoryScreen(),
           },

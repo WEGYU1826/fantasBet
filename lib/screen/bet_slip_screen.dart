@@ -117,12 +117,13 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
                       const Spacer(),
                       Chip(
                         label: Text(
-                          betSlip.totalOdd.toString(),
+                          betSlip.totalOdd.toStringAsFixed(2),
                           style: TextStyle(
-                              color: Theme.of(context)
-                                  .primaryTextTheme
-                                  .titleMedium!
-                                  .color),
+                            color: Theme.of(context)
+                                .primaryTextTheme
+                                .titleMedium!
+                                .color,
+                          ),
                         ),
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
@@ -139,7 +140,7 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
                       const Spacer(),
                       Chip(
                         label: Text(
-                          stake.toString(),
+                          stake.toStringAsFixed(2),
                           style: TextStyle(
                               color: Theme.of(context)
                                   .primaryTextTheme
