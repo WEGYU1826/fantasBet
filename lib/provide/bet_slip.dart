@@ -19,27 +19,21 @@ class BetSlipItem {
 }
 
 class BetSlip with ChangeNotifier {
-  Map<String, BetSlipItem> _betSlips = {};
-  Map<String, BetSlipItem> get betSlips {
-    return {..._betSlips};
+  List<BetSlipItem> _betSlipList = [];
+  List<BetSlipItem> get betsLipList {
+    return [..._betSlipList];
   }
 
-  // int get betCount {
-  //   var total = 0;
-  //   _betSlips.forEach((key, value) {
-  //     total += value.quantity;
-  //   });
-  //   return total;
-  // }
   int get betCount {
-    return _betSlips == null ? 0 : _betSlips.length;
+    return _betSlipList.length;
   }
 
   double get totalOdd {
     var total = 1.0;
-    _betSlips.forEach((key, value) {
-      total *= value.odd;
-    });
+    for (var element in _betSlipList) {
+      total *= element.odd;
+    }
+
     return total;
   }
 
@@ -51,9 +45,8 @@ class BetSlip with ChangeNotifier {
 
   void addBets(String matchID, String homeTeamName, String awayTeamName,
       double odd, String prediction) {
-    _betSlips.putIfAbsent(
-      matchID,
-      () => BetSlipItem(
+    _betSlipList.add(
+      BetSlipItem(
         id: DateTime.now().toString(),
         odd: odd,
         homeTeam: homeTeamName,
@@ -62,39 +55,16 @@ class BetSlip with ChangeNotifier {
         prediction: prediction,
       ),
     );
-
     notifyListeners();
   }
 
   void removeItem(String betID) {
-    _betSlips.remove(betID);
-    notifyListeners();
-  }
-
-  void removeSingleBetSlips(String betID) {
-    if (!_betSlips.containsKey(betID)) {
-      return;
-    }
-    if (_betSlips[betID]!.quantity > 1) {
-      _betSlips.update(
-        betID,
-        (existingCartItem) => BetSlipItem(
-          id: existingCartItem.id,
-          homeTeam: existingCartItem.homeTeam,
-          awayTeam: existingCartItem.awayTeam,
-          odd: existingCartItem.odd,
-          prediction: existingCartItem.prediction,
-          quantity: existingCartItem.quantity - 1,
-        ),
-      );
-    } else {
-      _betSlips.remove(betID);
-    }
+    _betSlipList.removeWhere((e) => e.id == betID);
     notifyListeners();
   }
 
   void clear() {
-    _betSlips = {};
+    _betSlipList = [];
     notifyListeners();
   }
 }

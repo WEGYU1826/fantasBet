@@ -6,13 +6,11 @@ import 'package:fantasy_bet/provide/permier_league.dart';
 import 'package:fantasy_bet/screen/auth_screen.dart';
 import 'package:fantasy_bet/screen/bet_history_screen.dart';
 import 'package:fantasy_bet/screen/bet_slip_screen.dart';
-import 'package:fantasy_bet/screen/champions_league_screen.dart';
 import 'package:fantasy_bet/screen/home_Screen.dart';
 import 'package:fantasy_bet/screen/permier_league_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
-
 import 'screen/splash_screen.dart';
 
 void main() {

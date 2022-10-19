@@ -52,7 +52,7 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
     final permierLeagueData =
         Provider.of<PermierLeague>(context, listen: false);
     final leagueList = permierLeagueData.list;
-    final betSlip = Provider.of<BetSlip>(context, listen: false);
+    final betSlip = Provider.of<BetSlip>(context);
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -222,10 +222,14 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
                               if (_myIndex[index.toString()]! >= 0 &&
                                   i == _myIndex[index.toString()]) {
                                 _myIndex[index.toString()] = -1;
+                                Provider.of<BetSlip>(context, listen: false)
+                                    .removeItem(
+                                  betSlip.betsLipList[index].id,
+                                );
                               } else {
                                 _myIndex[index.toString()] = i;
                               }
-                              print(' Someting: ${_betBtnText[1]}');
+
                               setState(() {});
                             },
                             child: Container(

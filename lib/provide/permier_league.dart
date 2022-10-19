@@ -175,8 +175,4 @@ class PermierLeague with ChangeNotifier {
   //   }
   // }
 
-  @override
-  void notifyListeners() {
-    super.notifyListeners();
-  }
 }

@@ -1,5 +1,4 @@
 import 'package:fantasy_bet/screen/bet_history_screen.dart';
-import 'package:fantasy_bet/screen/champions_league_screen.dart';
 import 'package:fantasy_bet/screen/permier_league_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

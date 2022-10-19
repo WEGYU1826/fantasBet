@@ -20,10 +20,12 @@ class _BetHistoryItemsState extends State<BetHistoryItems> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      height: _expanded ? min(widget.bets!.bets.length * 20 + 110, 200) : 95,
+      height: _expanded ? min(widget.bets!.bets.length * 20 + 110, 300) : 95,
       child: Card(
         margin: const EdgeInsets.all(10.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ListTile(
               title: Text('${widget.bets!.totalWin.toStringAsFixed(2)} Birr'),
@@ -49,7 +51,7 @@ class _BetHistoryItemsState extends State<BetHistoryItems> {
               duration: const Duration(milliseconds: 300),
               padding: const EdgeInsets.symmetric(
                 horizontal: 15,
-                vertical: 4,
+                // vertical: 4,
               ),
               height:
                   _expanded ? min(widget.bets!.bets.length * 20 + 10, 180) : 0,

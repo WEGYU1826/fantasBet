@@ -8,14 +8,12 @@ class BetSlipCard extends StatelessWidget {
     super.key,
     this.id,
     this.awayTeam,
-    this.betID,
     this.homeTeam,
     this.odd,
     this.prediction,
   });
 
   final String? id;
-  final String? betID;
   final String? homeTeam;
   final String? awayTeam;
   final double? odd;
@@ -72,7 +70,7 @@ class BetSlipCard extends StatelessWidget {
         );
       },
       onDismissed: (direction) {
-        Provider.of<BetSlip>(context, listen: false).removeItem(betID!);
+        Provider.of<BetSlip>(context, listen: false).removeItem(id!);
       },
       child: Card(
         margin: const EdgeInsets.symmetric(

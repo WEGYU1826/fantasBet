@@ -53,7 +53,7 @@ class BetHistory with ChangeNotifier {
                     homeTeam: items['homeTeam'],
                     awayTeam: items['awayTeam'],
                     quantity: items['quantity'],
-                    prediction: items['prediction'].toString(),
+                    prediction: items['prediction'],
                   ),
                 )
                 .toList(),

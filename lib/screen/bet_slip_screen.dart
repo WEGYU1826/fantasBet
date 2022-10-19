@@ -16,7 +16,6 @@ class BetSlipScreen extends StatefulWidget {
 class _BetSlipScreenState extends State<BetSlipScreen> {
   final _form = GlobalKey<FormState>();
 
-  TextEditingController stakeController = TextEditingController();
   double stake = 5;
 
   @override
@@ -44,7 +43,6 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
                       onSaved: (value) => setState(() {
                         stake = double.parse(value!);
                       }),
-                      controller: stakeController,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -173,9 +171,26 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
                     ],
                   ),
                   const Divider(),
-                  BetButton(
-                    betSlip: betSlip,
-                    stake: stake,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BetButton(
+                        betSlip: betSlip,
+                        stake: stake,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          betSlip.clear();
+                        },
+                        child: Text(
+                          'Clear All',
+                          style: GoogleFonts.acme(
+                            fontSize: 20.0,
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -184,14 +199,13 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
           const SizedBox(height: 10.0),
           Expanded(
             child: ListView.builder(
-              itemCount: betSlip.betSlips.length,
+              itemCount: betSlip.betsLipList.length,
               itemBuilder: (context, index) => BetSlipCard(
-                id: betSlip.betSlips.values.toList()[index].id,
-                betID: betSlip.betSlips.keys.toList()[index],
-                homeTeam: betSlip.betSlips.values.toList()[index].homeTeam,
-                awayTeam: betSlip.betSlips.values.toList()[index].awayTeam,
-                odd: betSlip.betSlips.values.toList()[index].odd,
-                prediction: betSlip.betSlips.values.toList()[index].prediction,
+                id: betSlip.betsLipList[index].id,
+                homeTeam: betSlip.betsLipList[index].homeTeam,
+                awayTeam: betSlip.betsLipList[index].awayTeam,
+                odd: betSlip.betsLipList[index].odd,
+                prediction: betSlip.betsLipList[index].prediction,
               ),
             ),
           ),
@@ -228,7 +242,7 @@ class _BetButtonState extends State<BetButton> {
               });
               await Provider.of<BetHistory>(context, listen: false)
                   .addBetHistory(
-                widget.betSlip.betSlips.values.toList(),
+                widget.betSlip.betsLipList,
                 widget.betSlip.totalWin(widget.stake),
               );
               setState(() {
