@@ -24,7 +24,7 @@ class PermierLeagueItem {
 class PermierLeague with ChangeNotifier {
   final List<PermierLeagueItem> _list = [
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm0',
       homeTeamName: "Brentford FC",
       homeTeamCrest: "https://crests.football-data.org/402.png",
       awayTeamName: 'Brighton FC',
@@ -41,7 +41,7 @@ class PermierLeague with ChangeNotifier {
       odd: [1.4, 8.0, 2.8],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm2',
       homeTeamName: "Wolverhampton FC",
       homeTeamCrest:
           "https://logodownload.org/wp-content/uploads/2019/04/wolverhampton-logo-escudo-3.png",
@@ -50,7 +50,7 @@ class PermierLeague with ChangeNotifier {
       odd: [2.0, 3.0, 2.9],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm3',
       homeTeamName: "Fulham FC",
       homeTeamCrest:
           "https://seeklogo.com/images/F/fulham-fc-logo-EBBC39136A-seeklogo.com.png",
@@ -59,7 +59,7 @@ class PermierLeague with ChangeNotifier {
       odd: [2.3, 4.2, 1.7],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm4',
       homeTeamName: "Tottenham Hotspur FC",
       homeTeamCrest:
           "https://assets.stickpng.com/images/580b57fcd9996e24bc43c4ee.png",
@@ -68,7 +68,7 @@ class PermierLeague with ChangeNotifier {
       odd: [1.3, 3.9, 2.2],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm5',
       homeTeamName: "Southampton FC",
       homeTeamCrest: "https://crests.football-data.org/340.png",
       awayTeamName: 'WestHam United FC',
@@ -76,7 +76,7 @@ class PermierLeague with ChangeNotifier {
       odd: [2.1, 5.4, 1.6],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm6',
       homeTeamName: "Manchester United FC",
       homeTeamCrest: "https://crests.football-data.org/66.png",
       awayTeamName: 'Newcastle United FC',
@@ -84,7 +84,7 @@ class PermierLeague with ChangeNotifier {
       odd: [1.2, 7.0, 3.5],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm7',
       homeTeamName: "Leeds United FC",
       homeTeamCrest: "https://crests.football-data.org/341.png",
       awayTeamName: 'Arsenal FC',
@@ -92,7 +92,7 @@ class PermierLeague with ChangeNotifier {
       odd: [5.1, 8.1, 1.1],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm8',
       homeTeamName: "Aston Villa FC",
       homeTeamCrest: "https://crests.football-data.org/58.png",
       awayTeamName: 'Chelsea FC',
@@ -100,7 +100,7 @@ class PermierLeague with ChangeNotifier {
       odd: [2.5, 4.0, 1.5],
     ),
     PermierLeagueItem(
-      id: 'm1',
+      id: 'm9',
       homeTeamName: "Liverpool FC",
       homeTeamCrest: "https://crests.football-data.org/64.png",
       awayTeamName: 'Manchester City FC',

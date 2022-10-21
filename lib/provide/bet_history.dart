@@ -9,12 +9,14 @@ class BetHistoryItem {
   final double totalWin;
   final List<BetSlipItem> bets;
   final DateTime dateTime;
+  final String status;
 
   BetHistoryItem({
     required this.id,
     required this.totalWin,
     required this.bets,
     required this.dateTime,
+    required this.status,
   });
 }
 
@@ -22,6 +24,8 @@ class BetHistory with ChangeNotifier {
   List<BetHistoryItem> _bets = [];
   final String authToken;
   final String userID;
+  var message;
+  var status;
 
   BetHistory(this._bets, this.authToken, this.userID);
 
@@ -45,6 +49,7 @@ class BetHistory with ChangeNotifier {
           BetHistoryItem(
             id: betID,
             totalWin: betData['totalWin'],
+            status: betData['status'],
             bets: (betData['bets'] as List<dynamic>)
                 .map(
                   (items) => BetSlipItem(
@@ -68,7 +73,39 @@ class BetHistory with ChangeNotifier {
     }
   }
 
-  Future<void> addBetHistory(List<BetSlipItem> betSlip, double total) async {
+  String messageResponse() {
+    return message;
+  }
+
+  String statusResponse() {
+    return status;
+  }
+
+  Future<void> payment(double stake) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://arcane-reaches-74570.herokuapp.com/api/bets'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "stake": stake,
+        }),
+      );
+      var extractedResponse = await jsonDecode(response.body);
+      message = extractedResponse['invoiceData']['description'];
+      status = extractedResponse['invoiceData']['status'];
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> addBetHistory(
+    List<BetSlipItem> betSlip,
+    double total,
+    String status,
+  ) async {
     final url =
         'https://fantasybet-f763e-default-rtdb.firebaseio.com/bethistorys/$userID.json?auth=$authToken';
     final timeStamp = DateTime.now();
@@ -77,6 +114,7 @@ class BetHistory with ChangeNotifier {
         Uri.parse(url),
         body: json.encode({
           'totalWin': total,
+          'status': status,
           'dateTime': timeStamp.toIso8601String(),
           'bets': betSlip
               .map((e) => {
@@ -95,6 +133,7 @@ class BetHistory with ChangeNotifier {
         BetHistoryItem(
           id: json.decode(response.body)['name'],
           totalWin: total,
+          status: status,
           bets: betSlip,
           dateTime: timeStamp,
         ),

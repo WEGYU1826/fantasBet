@@ -45,16 +45,30 @@ class BetSlip with ChangeNotifier {
 
   void addBets(String matchID, String homeTeamName, String awayTeamName,
       double odd, String prediction) {
-    _betSlipList.add(
-      BetSlipItem(
-        id: DateTime.now().toString(),
+    int searchIndex =
+        _betSlipList.indexWhere((element) => element.id == matchID);
+    if (searchIndex == -1) {
+      _betSlipList.add(
+        BetSlipItem(
+          id: matchID,
+          odd: odd,
+          homeTeam: homeTeamName,
+          awayTeam: awayTeamName,
+          quantity: 1,
+          prediction: prediction,
+        ),
+      );
+    } else {
+      _betSlipList[searchIndex] = BetSlipItem(
+        id: matchID,
         odd: odd,
         homeTeam: homeTeamName,
         awayTeam: awayTeamName,
         quantity: 1,
         prediction: prediction,
-      ),
-    );
+      );
+    }
+
     notifyListeners();
   }
 

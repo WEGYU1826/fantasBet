@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:fantasy_bet/provide/bet_slip.dart';
+import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/http_exception.dart';
@@ -12,6 +15,7 @@ class Auth with ChangeNotifier {
   DateTime? _expiryDate;
   String? _userID;
   Timer? _authTimer;
+  BetSlip betSlip = BetSlip();
 
   bool get isAuth {
     // ignore: unnecessary_null_comparison
@@ -115,6 +119,7 @@ class Auth with ChangeNotifier {
       _authTimer!.cancel();
       _authTimer = null;
     }
+
     notifyListeners();
     final pref = await SharedPreferences.getInstance();
     // pref.remove("userDate"); // only the userData key SharedPreferences

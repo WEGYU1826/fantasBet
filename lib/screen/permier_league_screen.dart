@@ -24,35 +24,29 @@ class PermierLeagueScreen extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<PermierLeagueScreen> {
-  var selectedMatch = -1;
-  int selectedIndex = -1;
-  HashSet selectItems = HashSet();
-
   Map<String, int> _myIndex = {};
+  BetSlip? betSlip;
+  bool _onInit = true;
 
   final List<String> _betBtnText = [
     'Home',
     'Draw',
     'Away',
   ];
-
-  // void doMultiSelection(String path, [String? betID]) {
-  //   setState(() {
-  //     if (selectItems.contains(path)) {
-  //       selectItems.remove(path);
-  //       Provider.of<BetSlip>(context, listen: false).removeItem(betID!);
-  //     } else {
-  //       selectItems.add(path);
-  //     }
-  //   });
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_onInit) {
+      betSlip = Provider.of<BetSlip>(context);
+    }
+    _onInit = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     final permierLeagueData =
         Provider.of<PermierLeague>(context, listen: false);
     final leagueList = permierLeagueData.list;
-    final betSlip = Provider.of<BetSlip>(context);
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -207,27 +201,31 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
                           // _myIndex[index.toString()]
                           return InkWell(
                             onTap: () {
-                              betSlip.addBets(
+                              betSlip!.addBets(
                                 permierLeagueData.list[index].id,
                                 permierLeagueData.list[index].homeTeamName,
                                 permierLeagueData.list[index].awayTeamName,
                                 permierLeagueData.list[index].odd[i],
                                 _betBtnText[i],
                               );
-                              if (_myIndex[index.toString()] == null) {
-                                _myIndex[index.toString()] = i;
+                              if (_myIndex[permierLeagueData.list[index].id] ==
+                                  null) {
+                                _myIndex[permierLeagueData.list[index].id] = i;
                                 setState(() {});
                                 return;
                               }
-                              if (_myIndex[index.toString()]! >= 0 &&
-                                  i == _myIndex[index.toString()]) {
-                                _myIndex[index.toString()] = -1;
-                                Provider.of<BetSlip>(context, listen: false)
-                                    .removeItem(
-                                  betSlip.betsLipList[index].id,
-                                );
+                              if (_myIndex[permierLeagueData.list[index].id]! >=
+                                      0 &&
+                                  i ==
+                                      _myIndex[
+                                          permierLeagueData.list[index].id]) {
+                                betSlip!
+                                    .removeItem(betSlip!.betsLipList[index].id);
+
+                                _myIndex
+                                    .remove(permierLeagueData.list[index].id);
                               } else {
-                                _myIndex[index.toString()] = i;
+                                _myIndex[permierLeagueData.list[index].id] = i;
                               }
 
                               setState(() {});
@@ -237,10 +235,14 @@ class _MyWidgetState extends State<PermierLeagueScreen> {
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               child: BetButtons(
                                 color: Colors.white,
-                                backgroundColor: _myIndex[index.toString()] == i
+                                backgroundColor: _myIndex[
+                                            permierLeagueData.list[index].id] ==
+                                        i
                                     ? Theme.of(context).accentColor
                                     : Theme.of(context).primaryColor,
-                                borderColor: _myIndex[index.toString()] == i
+                                borderColor: _myIndex[
+                                            permierLeagueData.list[index].id] ==
+                                        i
                                     ? Theme.of(context).accentColor
                                     : Theme.of(context).primaryColor,
                                 size: 25,

@@ -48,28 +48,6 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
-          // const Divider(),
-          // ListTile(
-          //   leading: SvgPicture.asset(
-          //     'assets/icons/cl.svg',
-          //     height: 35.0,
-          //     width: 35.0,
-          //   ),
-          //   title: Text(
-          //     'Champions League',
-          //     style: GoogleFonts.acme(fontSize: 20.0),
-          //   ),
-          //   onTap: () {
-          //     // Navigator.of(context).pushReplacementNamed(
-          //     //   ChampionsLeagueScreen.routeName,
-          //     // );
-          //     Navigator.of(context).pushReplacement(
-          //       CustomRoute(
-          //         builder: (context) => ChampionsLeagueScreen(),
-          //       ),
-          //     );
-          //   },
-          // ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.history_outlined),

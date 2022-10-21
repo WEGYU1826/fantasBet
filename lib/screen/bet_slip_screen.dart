@@ -200,13 +200,15 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
           Expanded(
             child: ListView.builder(
               itemCount: betSlip.betsLipList.length,
-              itemBuilder: (context, index) => BetSlipCard(
-                id: betSlip.betsLipList[index].id,
-                homeTeam: betSlip.betsLipList[index].homeTeam,
-                awayTeam: betSlip.betsLipList[index].awayTeam,
-                odd: betSlip.betsLipList[index].odd,
-                prediction: betSlip.betsLipList[index].prediction,
-              ),
+              itemBuilder: (context, index) {
+                return BetSlipCard(
+                  id: betSlip.betsLipList[index].id,
+                  homeTeam: betSlip.betsLipList[index].homeTeam,
+                  awayTeam: betSlip.betsLipList[index].awayTeam,
+                  odd: betSlip.betsLipList[index].odd,
+                  prediction: betSlip.betsLipList[index].prediction,
+                );
+              },
             ),
           ),
         ],
@@ -233,6 +235,7 @@ class _BetButtonState extends State<BetButton> {
 
   @override
   Widget build(BuildContext context) {
+    final betHistory = Provider.of<BetHistory>(context, listen: false);
     return TextButton(
       onPressed: (widget.betSlip.totalWin(widget.stake) <= 0 || _isLoading)
           ? null
@@ -240,15 +243,76 @@ class _BetButtonState extends State<BetButton> {
               setState(() {
                 _isLoading = true;
               });
-              await Provider.of<BetHistory>(context, listen: false)
-                  .addBetHistory(
-                widget.betSlip.betsLipList,
-                widget.betSlip.totalWin(widget.stake),
-              );
+              try {
+                await Provider.of<BetHistory>(context, listen: false)
+                    .payment(widget.stake);
+                if (betHistory.messageResponse() ==
+                    'For bet from Fantasy bet') {
+                  // ignore: use_build_context_synchronously
+                  await Provider.of<BetHistory>(context, listen: false)
+                      .addBetHistory(
+                    widget.betSlip.betsLipList,
+                    widget.betSlip.totalWin(widget.stake),
+                    betHistory.statusResponse(),
+                  );
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Successful',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.acme(fontSize: 20.0),
+                      ),
+                      duration: const Duration(seconds: 2),
+                      // ignore: use_build_context_synchronously
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                  );
+                  setState(() {
+                    _isLoading = false;
+                  });
+                  widget.betSlip.clear();
+                } else {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Invalid Transaction',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.acme(fontSize: 20.0),
+                      ),
+                      duration: const Duration(seconds: 2),
+                      // ignore: use_build_context_synchronously
+                      backgroundColor: Theme.of(context).accentColor,
+                    ),
+                  );
+                  setState(() {
+                    _isLoading = false;
+                  });
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                // ignore: use_build_context_synchronously
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      e.toString(),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.acme(fontSize: 20.0),
+                    ),
+                    duration: const Duration(seconds: 2),
+                    // ignore: use_build_context_synchronously
+                    backgroundColor: Theme.of(context).accentColor,
+                  ),
+                );
+              }
+
               setState(() {
                 _isLoading = false;
               });
-              widget.betSlip.clear();
             },
       child: _isLoading
           ? Center(
