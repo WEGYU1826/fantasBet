@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.fantasy_bet">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="fantasy_bet"
         android:name="${applicationName}"
